@@ -2,9 +2,10 @@ name: Validate Kubernetes Manifests
 on:
   workflow_call:
     inputs:
-      kubernetes-manifests:
-      required: true
-      type: string
+      kubernetes-manifest:
+        required: true
+        type: string
+
 jobs:
   validate-k8s-manifests:
     runs-on: ubuntu-latest
@@ -25,4 +26,4 @@ jobs:
         with:
           lintType: kubeval
           manifests: |
-            HelloDeployment.yaml, HelloService.yaml
+            ${{ inputs.kubernetes-manifest }}
