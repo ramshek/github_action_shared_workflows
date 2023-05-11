@@ -37,6 +37,6 @@ jobs:
         with:
           lintType: kubeval
           manifests: |
-            ${{ kubernetes-manifest-1 }}
-            ${{ kubernetes-manifest-2 }}
+            ${{ inputs.kubernetes-manifest-1 }}
+            ${{ inputs.kubernetes-manifest-2 }}
 
