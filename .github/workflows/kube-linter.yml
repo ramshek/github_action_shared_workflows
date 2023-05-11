@@ -39,4 +39,6 @@ jobs:
           manifests: |
             ${{ inputs.kubernetes-manifest-1 }}
             ${{ inputs.kubernetes-manifest-2 }}
-
+            ${{ inputs.kubernetes-manifest-3 }}
+            ${{ inputs.kubernetes-manifest-4 }}
+            ${{ inputs.kubernetes-manifest-5 }}
