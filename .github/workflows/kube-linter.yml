@@ -25,6 +25,8 @@ jobs:
         uses: azure/setup-kubectl@v3
         with:
           version: ${{ matrix.kubectl-version }}
+      - name: Print modified files
+        run: echo '${{ steps.manifest_file_list.outputs.stringList }}'
 
       - name: validate manifests
         uses: Azure/k8s-lint@v2.0
