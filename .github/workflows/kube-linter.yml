@@ -15,6 +15,11 @@ jobs:
     steps:
       - name: Checkout branch
         uses: actions/checkout@v3
+      - name: Create list from array of strings
+        id: manifest_file_list
+        uses: lucaspinheirogit/list-from-string-array-action@v1.4.3
+        with:
+          stringArray: ${{ inputs.kubernetes-manifest }}
 
       - name: Setup Kubectl version
         uses: azure/setup-kubectl@v3
@@ -26,4 +31,4 @@ jobs:
         with:
           lintType: kubeval
           manifests: |
-            ${{ inputs.kubernetes-manifest }}
+            ${{ steps.manifest_file_list.outputs.stringList }}
