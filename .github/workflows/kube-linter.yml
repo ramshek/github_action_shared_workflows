@@ -1,0 +1,44 @@
+name: Validate Kubernetes Manifests
+on:
+  workflow_call:
+    inputs:
+      kubernetes-manifest-1:
+        required: true
+        type: string
+      kubernetes-manifest-2:
+        required: false
+        type: string
+      kubernetes-manifest-3:
+        required: false
+        type: string
+      kubernetes-manifest-4:
+        required: false
+        type: string
+      kubernetes-manifest-5:
+        required: false
+        type: string
+jobs:
+  validate-k8s-manifests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        kubectl-version: [v1.24.10]
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v3
+
+      - name: Setup Kubectl version
+        uses: azure/setup-kubectl@v3
+        with:
+          version: ${{ matrix.kubectl-version }}
+
+      - name: validate manifests
+        uses: Azure/k8s-lint@v2.0
+        with:
+          lintType: kubeval
+          manifests: |
+            ${{ kubernetes-manifest-1 }}
+            ${{ kubernetes-manifest-2 }}
+            ${{ kubernetes-manifest-3 }}
+            ${{ kubernetes-manifest-4 }}
+            ${{ kubernetes-manifest-5 }}
