@@ -37,8 +37,7 @@ jobs:
     matrix:
       paths: ${{ fromJson(needs.list-files.outputs.paths) }}
       runs-on: ubuntu-latest
-      steps:
-    
+    steps:
       - name: validate manifests
         uses: Azure/k8s-lint@v2.0
         with:
