@@ -14,7 +14,6 @@ jobs:
     strategy:
       matrix:
         kubectl-version: [v1.24.10]
-        manifest-paths: ${{ fromJson(needs.list-files.outputs.paths) }}
     steps:
       - name: Checkout branch
         uses: actions/checkout@v3
@@ -32,10 +31,16 @@ jobs:
           ref: ${{ github.ref }}
           path: "kubernetes/"
           ext: ".yml"   
-        
+  Test:
+      needs: list-files
+      strategy:
+        matrix:
+          paths: ${{ fromJson(needs.list-files.outputs.paths) }}
+      runs-on: ubuntu-latest
+    
       - name: validate manifests
         uses: Azure/k8s-lint@v2.0
         with:
           lintType: kubeval
           manifests: |
-             ${{ matrix.manifest-paths }}
+             ${{ matrix.paths }}
