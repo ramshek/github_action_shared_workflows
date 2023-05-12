@@ -36,14 +36,19 @@ jobs:
           type: ".yml"
 
       - name: Output results
+        id: create_manifest_list
         run: |
           echo "Found ${{ steps.pl.outputs.path_count }} file(s) with this extension:"
-          for i in ${{ steps.pl.outputs.paths }}; do
+          file_list=$(for i in ${{ steps.pl.outputs.paths }}; do
           echo $i
-          done
+          done)
+          echo "MANIFEST_FILE_LIST<<EOF" >> $GITHUB_ENV
+          # here we can place the command that will generate multi-line text
+          echo $file_list >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
         
       - name: Create List of Manifest Files
-        id: create_manifest_list
+        
         run: |
           file_list=$(for file in ${{ inputs.kubernetes-manifest }}; do 
             echo  "$file\n"
