@@ -23,10 +23,10 @@ jobs:
       - name: Create list of modified files
         id: modified_files_list
         run: |
-          echo "list_of_files=for file in ${{ inputs.kubernetes-manifest}}
+          echo "list_of_files=$(for file in ${{ inputs.kubernetes-manifest}}
           do
            echo $file
-          done" >> $GITHUB_OUTPUT
+          done)" >> $GITHUB_OUTPUT
           
           
       - name: validate manifests
