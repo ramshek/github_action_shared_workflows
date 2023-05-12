@@ -4,7 +4,7 @@ on:
     inputs:
       kubernetes-manifest:
         required: true
-        type: string
+        type: []
 
 jobs:
   validate-k8s-manifests:
