@@ -15,42 +15,12 @@ jobs:
     steps:
       - name: Checkout branch
         uses: actions/checkout@v3
-      - name: Create list from array of strings
-        id: manifest_file_list
-        uses: lucaspinheirogit/list-from-string-array-action@v1.4.3
-        with:
-          stringArray: ${{ inputs.kubernetes-manifest }}
-
+        
       - name: Setup Kubectl version
         uses: azure/setup-kubectl@v3
         with:
           version: ${{ matrix.kubectl-version }}
-      - name: Print modified files
-        run: echo "${{ steps.manifest_file_list.outputs.stringList }}"
-        
-      - name: Fetch action
-        id: pl
-        uses: Rishabh510/Path-lister-action@master
-        with:
-          path: "kubernetes"
-          type: ".yml"
-
-      - name: Output results
-        id: create_manifest_list
-        run: |
-          echo "Found ${{ steps.pl.outputs.path_count }} file(s) with this extension:"
-          file_list=$(for i in ${{ steps.pl.outputs.paths }}; do
-          echo - $i
-          done)
-          echo "MANIFEST_FILE_LIST<<EOF" >> $GITHUB_ENV
-          # here we can place the command that will generate multi-line text
-          echo $file_list >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
-
-      - name: print variable
-        run: |
-          echo "${{ steps.create_manifest_list.outputs.FILE_LIST }}"
-
+          
       - name: validate manifests
         uses: Azure/k8s-lint@v2.0
         with:
