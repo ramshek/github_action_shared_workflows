@@ -24,7 +24,7 @@ jobs:
         id: modified_files_list
         run: |
           echo "LIST_OF_FILES_ENV_VAR<<EOF" >> $GITHUB_ENV
-          echo "list_of_files=$(for file in ${{ inputs.kubernetes-manifest}}
+          echo "$(for file in ${{ inputs.kubernetes-manifest}}
           do
            echo $file
           done)" >> $GITHUB_ENV
