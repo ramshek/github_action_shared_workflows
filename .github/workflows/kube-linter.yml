@@ -9,8 +9,6 @@ on:
 jobs:
   validate-k8s-manifests:
     runs-on: ubuntu-latest
-    outputs:
-      paths: ${{ steps.list-files.outputs.paths }}
     strategy:
       matrix:
         kubectl-version: [v1.24.10]
@@ -22,25 +20,15 @@ jobs:
         uses: azure/setup-kubectl@v3
         with:
           version: ${{ matrix.kubectl-version }}
-          
-      - name: List Files
-        id: list-files
-        uses: mirko-felice/list-files-action@v3.0.1
+      - name: Create list of modified files
+        id: modified_files_list
+        uses: lucaspinheirogit/list-from-string-array-action@v1.4.3
         with:
-          repo: ${{ github.repository }}
-          ref: ${{ github.ref }}
-          path: "kubernetes/"
-          ext: ".yml"   
-  Test:
-    needs: list-files
-    strategy:
-    matrix:
-      paths: ${{ fromJson(needs.list-files.outputs.paths) }}
-      runs-on: ubuntu-latest
-    steps:
+          stringArray: ${{ inputs.kubernetes-manifest }}
+          
       - name: validate manifests
         uses: Azure/k8s-lint@v2.0
         with:
           lintType: kubeval
           manifests: |
-             ${{ fromJson(needs.list-files.outputs.paths) }}
+             ${{ steps.modified_files_list.outputs.stringList }}
