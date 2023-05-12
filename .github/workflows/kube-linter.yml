@@ -29,6 +29,8 @@ jobs:
            echo $file
           done)" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
+      - name: output files
+        run: echo ${{ env.LIST_OF_FILES_ENV_VAR }}
           
       - name: validate manifests
         uses: Azure/k8s-lint@v2.0
