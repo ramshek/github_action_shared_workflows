@@ -14,7 +14,6 @@ jobs:
     strategy:
       matrix:
         kubectl-version: [v1.24.10]
-        paths: ${{ fromJson(steps.list-files.outputs.paths) }}
     steps:
       - name: Checkout branch
         uses: actions/checkout@v3
@@ -38,4 +37,4 @@ jobs:
         with:
           lintType: kubeval
           manifests: |
-             ${{ matrix.paths }}
+             ${{ fromJson(steps.list-files.outputs.paths) }}
