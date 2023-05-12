@@ -56,4 +56,4 @@ jobs:
         with:
           lintType: kubeval
           manifests: |
-             - kubernetes/deployment.yml
+             kubernetes/deployment.yml
