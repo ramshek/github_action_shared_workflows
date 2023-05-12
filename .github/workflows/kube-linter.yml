@@ -31,14 +31,14 @@ jobs:
       - name: Create List of Manifest Files
         id: create_manifest_list
         run: |
-          for file in ${{ inputs.kubernetes-manifest }}; do 
-            echo "FILE_LIST=- $file" >> $GITHUB_OUTPUT
-          done
-      - name: Print file list
-        run: echo "${{ steps.create_manifest_list.outputs.FILE_LIST }}"
+          file_list=$(for file in ${{ inputs.kubernetes-manifest }}; do 
+            echo  "$file"
+          done)
+          echo "$file_list"
+
       - name: validate manifests
         uses: Azure/k8s-lint@v2.0
         with:
           lintType: kubeval
           manifests: |
-            ${{ steps.create_manifest_list.outputs.FILE_LIST }}
+ 
