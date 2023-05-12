@@ -26,7 +26,7 @@ jobs:
         with:
           version: ${{ matrix.kubectl-version }}
       - name: Print modified files
-        run: echo ${{ steps.manifest_file_list.outputs.stringList }}
+        run: echo "${{ steps.manifest_file_list.outputs.stringList }}"
         
 
       - name: validate manifests
