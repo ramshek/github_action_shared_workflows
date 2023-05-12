@@ -23,10 +23,13 @@ jobs:
       - name: Create list of modified files
         id: modified_files_list
         run: |
+          echo "LIST_OF_FILES_ENV_VAR<<EOF" >> $GITHUB_ENV
           echo "list_of_files=$(for file in ${{ inputs.kubernetes-manifest}}
           do
            echo $file
-          done)" >> $GITHUB_OUTPUT
+          done)" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+          
           
           
       - name: validate manifests
@@ -34,4 +37,4 @@ jobs:
         with:
           lintType: kubeval
           manifests: |
-             ${{ steps.modified_files_list.outputs.list_of_files }}
+             ${{ env.LIST_OF_FILES_ENV_VAR }}
