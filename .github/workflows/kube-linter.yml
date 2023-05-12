@@ -28,7 +28,11 @@ jobs:
       - name: Print modified files
         run: echo "${{ steps.manifest_file_list.outputs.stringList }}"
         
-
+      - name: List all changed files
+        run: |
+          for file in ${{ inputs.kubernetes-manifest }}; do
+            echo "- file"
+          done
       - name: validate manifests
         uses: Azure/k8s-lint@v2.0
         with:
