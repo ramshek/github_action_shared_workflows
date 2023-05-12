@@ -27,9 +27,6 @@ jobs:
           path: ${{ inputs.kubernetes-manifest-folder}}
           ext: ".yml"
           
-      - name: outputs
-        run: echo ${{ steps.list-files.outputs.paths }}
-        
       - name: Setup Kubectl version
         uses: azure/setup-kubectl@v3
         with:
@@ -43,7 +40,7 @@ jobs:
            echo $file
           done)" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
-
+          
       - name: validate manifests
         uses: Azure/k8s-lint@v2.0
         with:
