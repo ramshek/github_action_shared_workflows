@@ -31,9 +31,13 @@ jobs:
       - name: Create List of Manifest Files
         id: create_manifest_list
         run: |
-          echo "file_list=$(for file in ${{ inputs.kubernetes-manifest }}; do 
+          file_list=$(for file in ${{ inputs.kubernetes-manifest }}; do 
             echo  "$file"
-          done)" >> $GITHUB_OUTPUT
+          done)"
+          echo "MANIFEST_FILE_LIST<<EOF" >> $GITHUB_ENV
+          # here we can place the command that will generate multi-line text
+          echo $file_list >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
 
       - name: print variable
         run: |
@@ -44,4 +48,4 @@ jobs:
         with:
           lintType: kubeval
           manifests: |
-             ${{ steps.create_manifest_list.outputs.FILE_LIST }}
+             ${{ steps.create_manifest_list.outputs.MANIFEST_FILE_LIST }}
