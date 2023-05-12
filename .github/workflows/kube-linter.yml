@@ -28,14 +28,15 @@ jobs:
       - name: Print modified files
         run: echo "${{ steps.manifest_file_list.outputs.stringList }}"
         
-      - name: List all changed files
+      - name: Create List of Manifest Files
+        id: create_manifest_list
         run: |
-          for file in ${{ inputs.kubernetes-manifest }}; do
-            echo "- $file"
+          for file in ${{ inputs.kubernetes-manifest }}; do 
+            echo "FILE_LIST=- $file" >> $GITHUB_OUTPUT
           done
       - name: validate manifests
         uses: Azure/k8s-lint@v2.0
         with:
           lintType: kubeval
           manifests: |
-            ${{ inputs.kubernetes-manifest }}
+            ${{ steps.create_manifest_list.outputs.FILE_LIST }}
