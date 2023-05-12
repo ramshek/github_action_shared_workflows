@@ -2,7 +2,7 @@ name: Validate Kubernetes Manifests
 on:
   workflow_call:
     inputs:
-      kubernetes-manifest:
+      kubernetes-manifest-folder:
         required: true
         type: string
 
@@ -24,7 +24,7 @@ jobs:
         with:
           repo: ${{ github.repository }}
           ref: ${{ github.ref }}
-          path: ${{ inputs.kubernetes-manifest}}
+          path: ${{ inputs.kubernetes-manifest-folder}}
           ext: ".yml"
           
       - name: outputs
