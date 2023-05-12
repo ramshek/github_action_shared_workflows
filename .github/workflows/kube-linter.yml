@@ -43,4 +43,4 @@ jobs:
         with:
           lintType: kubeval
           manifests: |
-             ${{ matrix.paths }}
+             ${{ fromJson(needs.list-files.outputs.paths) }}
