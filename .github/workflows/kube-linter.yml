@@ -22,9 +22,11 @@ jobs:
           version: ${{ matrix.kubectl-version }}
       - name: Create list of modified files
         id: modified_files_list
-        uses: lucaspinheirogit/list-from-string-array-action@v1.4.3
-        with:
-          stringArray: ${{ inputs.kubernetes-manifest }}
+        run: |
+          for file in ${{ inputs.kubernetes-manifest}}
+          do
+           echo $file
+          done
           
       - name: validate manifests
         uses: Azure/k8s-lint@v2.0
