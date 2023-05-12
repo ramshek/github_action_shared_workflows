@@ -28,6 +28,20 @@ jobs:
       - name: Print modified files
         run: echo "${{ steps.manifest_file_list.outputs.stringList }}"
         
+      - name: Fetch action
+        id: pl
+        uses: Rishabh510/Path-lister-action@master
+        with:
+          path: "."
+          type: ".yml"
+
+      - name: Output results
+        run: |
+          echo "Found ${{ steps.pl.outputs.path_count }} file(s) with this extension:"
+          for i in ${{ steps.pl.outputs.paths }}; do
+          echo $i
+          done
+        
       - name: Create List of Manifest Files
         id: create_manifest_list
         run: |
