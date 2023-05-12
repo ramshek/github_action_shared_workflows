@@ -56,4 +56,4 @@ jobs:
         with:
           lintType: kubeval
           manifests: |
-             ${{ steps.create_manifest_list.outputs.MANIFEST_FILE_LIST }}
+             - kubernetes/deployment.yml
