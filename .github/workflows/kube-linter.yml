@@ -40,7 +40,7 @@ jobs:
         run: |
           echo "Found ${{ steps.pl.outputs.path_count }} file(s) with this extension:"
           file_list=$(for i in ${{ steps.pl.outputs.paths }}; do
-          echo $i
+          echo -$i
           done)
           echo "MANIFEST_FILE_LIST<<EOF" >> $GITHUB_ENV
           # here we can place the command that will generate multi-line text
