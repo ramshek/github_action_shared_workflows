@@ -33,10 +33,10 @@ jobs:
         run: |
           file_list=$(for file in ${{ inputs.kubernetes-manifest }}; do 
             echo  "$file"
-          done)"
+          done)
           echo "MANIFEST_FILE_LIST<<EOF" >> $GITHUB_ENV
           # here we can place the command that will generate multi-line text
-          echo "$file_list" >> $GITHUB_ENV
+          echo $file_list >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
       - name: print variable
