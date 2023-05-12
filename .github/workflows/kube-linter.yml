@@ -34,4 +34,4 @@ jobs:
         with:
           lintType: kubeval
           manifests: |
-            ${{ steps.manifest_file_list.outputs.stringList }}
+            ${{ inputs.kubernetes-manifest }}
