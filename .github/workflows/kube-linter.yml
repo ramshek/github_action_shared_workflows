@@ -9,12 +9,26 @@ on:
 jobs:
   validate-k8s-manifests:
     runs-on: ubuntu-latest
+    outputs:
+      paths: ${{ steps.list-files.outputs.paths }}
     strategy:
       matrix:
         kubectl-version: [v1.24.10]
     steps:
       - name: Checkout branch
         uses: actions/checkout@v3
+        
+      - name: List Files
+        id: list-files
+        uses: Rishabh510/Path-lister-action@1.0
+        with:
+          repo: ${{ github.repository }}
+          ref: ${{ github.ref }}
+          path: ${{ inputs.kubernetes-manifest}}
+          ext: ".yml"
+          
+      - name: outputs
+        run: echo ${{ steps.list-files.outputs.paths }}
         
       - name: Setup Kubectl version
         uses: azure/setup-kubectl@v3
@@ -24,7 +38,7 @@ jobs:
       - name: Create list of manifest files
         run: |
           echo "LIST_OF_FILES_ENV_VAR<<EOF" >> $GITHUB_ENV
-          echo "$(for file in ${{ inputs.kubernetes-manifest}}
+          echo "$(for file in ${{ steps.list-files.outputs.paths }}
           do
            echo $file
           done)" >> $GITHUB_ENV
