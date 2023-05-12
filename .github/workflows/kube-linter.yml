@@ -32,7 +32,7 @@ jobs:
         id: create_manifest_list
         run: |
           file_list=$(for file in ${{ inputs.kubernetes-manifest }}; do 
-            echo  "$file"
+            echo  -e "\n$file"
           done)
           echo "MANIFEST_FILE_LIST<<EOF" >> $GITHUB_ENV
           # here we can place the command that will generate multi-line text
