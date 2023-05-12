@@ -32,11 +32,12 @@ jobs:
           path: "kubernetes/"
           ext: ".yml"   
   Test:
-      needs: list-files
-      strategy:
-        matrix:
-          paths: ${{ fromJson(needs.list-files.outputs.paths) }}
+    needs: list-files
+    strategy:
+    matrix:
+      paths: ${{ fromJson(needs.list-files.outputs.paths) }}
       runs-on: ubuntu-latest
+      steps:
     
       - name: validate manifests
         uses: Azure/k8s-lint@v2.0
