@@ -26,7 +26,7 @@ jobs:
         run: |
           list = ${{ inputs.kubernetes-manifest-files }}
           echo "LIST_OF_FILES_ENV_VAR<<EOF" >> $GITHUB_ENV
-          echo "$(for file in ${list//\\n/ }
+          echo "$(for file in ${${{ inputs.kubernetes-manifest-files }}//\\n/ }
           do
            echo $file
           done)" >> $GITHUB_ENV
