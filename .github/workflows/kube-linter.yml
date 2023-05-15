@@ -33,4 +33,4 @@ jobs:
         with:
           lintType: kubeval
           manifests: |
-             ${{ inputs.kubernetes-manifest-file }}
+             ${{ env.LIST_OF_FILES_ENV_VAR }}
