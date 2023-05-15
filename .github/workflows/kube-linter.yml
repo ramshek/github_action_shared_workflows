@@ -24,9 +24,9 @@ jobs:
           
       - name: Create list of manifest files
         run: |
-          list = (${{ inputs.kubernetes-manifest-files }})
+          list = ${{ inputs.kubernetes-manifest-files }}
           echo "LIST_OF_FILES_ENV_VAR<<EOF" >> $GITHUB_ENV
-          echo "$(for file in $list
+          echo "$(for file in ${list//\\n/ }
           do
            echo $file
           done)" >> $GITHUB_ENV
