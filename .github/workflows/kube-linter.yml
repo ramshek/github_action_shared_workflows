@@ -2,7 +2,7 @@ name: Validate Kubernetes Manifests
 on:
   workflow_call:
     inputs:
-      kubernetes-manifest-folder:
+      kubernetes-manifest-files:
         required: true
         type: string
 
@@ -18,15 +18,6 @@ jobs:
       - name: Checkout branch
         uses: actions/checkout@v3
         
-      - name: List Files
-        id: list-files
-        uses: Rishabh510/Path-lister-action@1.0
-        with:
-          repo: ${{ github.repository }}
-          ref: ${{ github.ref }}
-          path: ${{ inputs.kubernetes-manifest-folder}}
-          ext: ".yml"
-          
       - name: Setup Kubectl version
         uses: azure/setup-kubectl@v3
         with:
@@ -35,7 +26,7 @@ jobs:
       - name: Create list of manifest files
         run: |
           echo "LIST_OF_FILES_ENV_VAR<<EOF" >> $GITHUB_ENV
-          echo "$(for file in ${{ steps.list-files.outputs.paths }}
+          echo "$(for file in ${{ inputs.kubernetes-manifest-files }}
           do
            echo $file
           done)" >> $GITHUB_ENV
