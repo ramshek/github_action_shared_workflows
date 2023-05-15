@@ -24,8 +24,12 @@ jobs:
           
       - name: Create list of manifest files
         run: |
+		      FILE_LIST = (${{ inputs.kubernetes-manifest-files }})
           echo "LIST_OF_FILES_ENV_VAR<<EOF" >> $GITHUB_ENV
-          echo "${{ inputs.kubernetes-manifest-files }} | while IFS= read -r line ; do echo $line; done" >> $GITHUB_ENV
+          echo "$(for file in ${FILE_LIST[@]}
+          do
+           echo $file
+          done)" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
           
       - name: validate manifests
