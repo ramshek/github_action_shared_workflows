@@ -22,18 +22,9 @@ jobs:
         with:
           version: ${{ matrix.kubectl-version }}
           
-      - name: Create list of manifest files
-        run: |
-          echo "LIST_OF_FILES_ENV_VAR<<EOF" >> $GITHUB_ENV
-          echo "$(for file in ${{ inputs.kubernetes-manifest-files }}
-          do
-           echo $file
-          done)" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
-          
       - name: validate manifests
         uses: Azure/k8s-lint@v2.0
         with:
           lintType: kubeval
           manifests: |
-             ${{ env.LIST_OF_FILES_ENV_VAR }}
+             ${{ inputs.kubernetes-manifest-file }}
