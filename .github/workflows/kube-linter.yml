@@ -12,6 +12,8 @@ on:
 jobs:
   validate-k8s-manifests:
     runs-on: ubuntu-latest
+    container:
+      options: --user root
     
     strategy:
       matrix:
