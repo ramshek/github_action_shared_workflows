@@ -8,11 +8,6 @@ on:
       kubernetes-manifest-env:
           required: true
           type: string
-      github_token:
-          description: "The GITHUB_TOKEN secret"
-          type: string
-          required: true
-  
 
 jobs:
   validate-k8s-manifests:
