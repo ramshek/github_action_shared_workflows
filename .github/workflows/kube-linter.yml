@@ -40,7 +40,7 @@ jobs:
           
       - name: Replace Manifest Values
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MY_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # Define the key-value pairs
           variables= ${{ inputs.kubernetes-manifest-env }}
