@@ -40,7 +40,7 @@ jobs:
           files: |
             ${{ inputs.kubernetes-manifest-files }}
         env:
-            ${{ inputs.kubernetes-manifest-env }}
+            HTTP_REPLICAS: "1"
 
           
       - name: validate manifests
