@@ -36,6 +36,8 @@ jobs:
           echo "EOF" >> $GITHUB_ENV
           
       - name: Replace Manifest Values
+        env:
+          MY_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # Define the key-value pairs
           variables= ${{ inputs.kubernetes-manifest-env }}
