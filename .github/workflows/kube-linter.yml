@@ -1,6 +1,9 @@
 name: Validate Kubernetes Manifests
 on:
   workflow_call:
+    secrets:
+      GITHUB_TOKEN:
+        description: 'github token'
     inputs:
       kubernetes-manifest-files:
         required: true
