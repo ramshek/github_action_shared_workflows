@@ -1,9 +1,6 @@
 name: Validate Kubernetes Manifests
 on:
   workflow_call:
-    secrets:
-      GITHUB_TOKEN:
-        description: 'github token'
     inputs:
       kubernetes-manifest-files:
         required: true
@@ -39,8 +36,6 @@ jobs:
           echo "EOF" >> $GITHUB_ENV
           
       - name: Replace Manifest Values
-        env:
-          MY_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # Define the key-value pairs
           variables= ${{ inputs.kubernetes-manifest-env }}
