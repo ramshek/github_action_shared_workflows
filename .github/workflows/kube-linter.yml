@@ -8,6 +8,7 @@ on:
       kubernetes-manifest-env:
           required: true
           type: string
+  
 
 jobs:
   validate-k8s-manifests:
@@ -16,6 +17,8 @@ jobs:
     strategy:
       matrix:
         kubectl-version: [v1.24.10]
+    permissions:
+      contents: 'write'
     steps:
       - name: Checkout branch
         uses: actions/checkout@v3
