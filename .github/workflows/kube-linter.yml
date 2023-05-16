@@ -49,7 +49,7 @@ jobs:
             # Loop through the manifest files
             for manifest in "${manifests[@]}"; do
               # Replace the value with the key in the manifest file
-              sed -i "s|$value|$key|g" "$manifest"
+              sudo sed -i "s|$value|$key|g" "$manifest"
             done
           done <<< "$variables"
 
