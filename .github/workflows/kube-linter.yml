@@ -11,7 +11,7 @@ on:
 
 jobs:
   validate-k8s-manifests:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest 
     
     strategy:
       matrix:
@@ -19,6 +19,7 @@ jobs:
     permissions:
       contents: 'read'
       id-token: 'write'
+ 
     steps:
       - name: Checkout branch
         uses: actions/checkout@v3
@@ -35,6 +36,8 @@ jobs:
           echo "EOF" >> $GITHUB_ENV
           
       - name: Replace Manifest Values
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # Define the key-value pairs
           variables= ${{ inputs.kubernetes-manifest-env }}
