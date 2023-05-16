@@ -19,6 +19,7 @@ jobs:
         kubectl-version: [v1.24.10]
     permissions:
       contents: 'write'
+      actions: 'write'
     steps:
       - name: Checkout branch
         uses: actions/checkout@v3
