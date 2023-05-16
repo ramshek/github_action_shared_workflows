@@ -5,6 +5,9 @@ on:
       kubernetes-manifest-files:
         required: true
         type: string
+      kubernetes-manifest-env:
+          required: true
+          type: string
 
 jobs:
   validate-k8s-manifests:
@@ -27,6 +30,22 @@ jobs:
           echo "LIST_OF_FILES_ENV_VAR<<EOF" >> $GITHUB_ENV
           echo "${{ inputs.kubernetes-manifest-files }}" | while read -r line ; do echo $line; done >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
+      - name: Replace Manifest Values
+        run: |
+          # Define the key-value pairs
+          variables= ${{ inputs.kubernetes-manifest-env }}
+
+          # Define the list of Kubernetes manifest files
+          manifests= ${{ inputs.kubernetes-manifest-files }}
+
+          # Loop through the key-value pairs
+          while IFS='=' read -r key value; do
+            # Loop through the manifest files
+            for manifest in "${manifests[@]}"; do
+              # Replace the value with the key in the manifest file
+              sed -i "s|$value|$key|g" "$manifest"
+            done
+          done <<< "$variables"
           
       - name: validate manifests
         uses: Azure/k8s-lint@v2.0
