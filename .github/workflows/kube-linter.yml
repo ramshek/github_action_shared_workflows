@@ -63,7 +63,10 @@ jobs:
 
             echo "$content" > "$file"
           done     
-            
+      - name: Show updated files
+        run: |
+          git status --porcelain
+          
       - uses: Azure/k8s-set-context@v3
         with:
           kubeconfig:  ${{ secrets.KUBE_CONFIG_SECRET_NAME }}
