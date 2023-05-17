@@ -51,4 +51,11 @@ jobs:
       - uses: Azure/k8s-set-context@v3
         with:
           kubeconfig:  ${{ secrets.KUBE_CONFIG_SECRET_NAME }}
+          
+      - name: validate 
+        uses: Azure/k8s-lint@v2.0
+        with:
+          lintType: dryrun
+          manifests: |
+             ${{ env.LIST_OF_FILES_ENV_VAR }}
 
