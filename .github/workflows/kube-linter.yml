@@ -35,7 +35,7 @@ jobs:
         with:
           files: |
             ${{ inputs.kubernetes-manifest-files }}
-          env: ${{ inputs.kubernetes-manifest-env }}    
+        env: ${{ inputs.kubernetes-manifest-env }}    
           
       - name: Create list of manifest files
         run: |
