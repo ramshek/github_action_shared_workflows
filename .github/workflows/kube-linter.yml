@@ -41,7 +41,7 @@ jobs:
         with:
           files: |
             ${{ inputs.kubernetes-manifest-files }}
-          mapping: ${{ inputs.kubernetes-manifest-env }}
+          env: ${{ inputs.kubernetes-manifest-env }}
             
       - name: validate manifests
         uses: Azure/k8s-lint@v2.0
