@@ -39,11 +39,19 @@ jobs:
           echo "${{ inputs.kubernetes-manifest-files }}" | while read -r line ; do echo $line; done >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
           
-      - name: replace place holder values in kubernetes manifests
-        if: "${{ inputs.kubernetes-manifest-env != '' }}"
+      - name: Set Parameters
+        id: set_params
         run: |
-          files=$(echo "${{ inputs.kubernetes-manifest-files }}" | tr -d '\r')
-          placeholders=$(echo "${{ inputs.kubernetes-manifest-env }}" | tr -d '\r')
+          echo "${{ inputs.kubernetes-manifest-files }}" > ${{ env.FILES_PATH }}
+          echo "${{ kubernetes-manifest-env }}" > ${{ env.PLACEHOLDERS_PATH }}
+        env:
+          FILES_PATH: ${{ github.workspace }}/files.txt
+          PLACEHOLDERS_PATH: ${{ github.workspace }}/placeholders.txt
+          
+      - name: Replace Placeholders
+        run: |
+          files=$(cat ${{ env.FILES_PATH }})
+          placeholders=$(cat ${{ env.PLACEHOLDERS_PATH }})
 
           IFS=$'\n' read -r -a files_array <<< "$files"
           IFS=$'\n' read -r -a placeholders_array <<< "$placeholders"
@@ -62,7 +70,8 @@ jobs:
             done
 
             echo "$content" > "$file"
-          done     
+          done    
+      
       - name: Show updated files
         run: |
           git status --porcelain
