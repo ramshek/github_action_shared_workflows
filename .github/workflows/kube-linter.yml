@@ -35,12 +35,11 @@ jobs:
           echo "${{ inputs.kubernetes-manifest-files }}" | while read -r line ; do echo $line; done >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
           
-      - uses: microsoft/variable-substitution@v1 
-        with:
-          files: |
-            ${{ inputs.kubernetes-manifest-files }}
+      - name: variable substitute
         env:
-            replicas: 1
+         ${{ inputs.kubernetes-manifest-env }}
+        run: |
+          envsubst < ${{ inputs.kubernetes-manifest-files }}
 
           
       - name: validate manifests
