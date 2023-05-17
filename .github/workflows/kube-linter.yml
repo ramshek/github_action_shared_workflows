@@ -29,13 +29,11 @@ jobs:
         with:
           version: ${{ matrix.kubectl-version }}
           
-      - name: Perform variable substitution
-        id: varsub
-        uses: microsoft/variable-substitution@v1
-        with:
-          files: |
-            ${{ inputs.kubernetes-manifest-files }}
-        env: ${{ inputs.kubernetes-manifest-env }}    
+      - name: Create list of variables
+        run: |
+          echo "LIST_OF_ENV_VAR<<EOF" >> $GITHUB_ENV
+          echo "${{ inputs.kubernetes-manifest-env }}" | while read -r line ; do echo $line; done >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
           
       - name: Create list of manifest files
         run: |
@@ -43,6 +41,13 @@ jobs:
           echo "${{ inputs.kubernetes-manifest-files }}" | while read -r line ; do echo $line; done >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
           
+      - name: Perform variable substitution
+        id: varsub
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: |
+            ${{ env.LIST_OF_FILES_ENV_VAR }}
+        env: ${{ env.LIST_OF_ENV_VAR }}              
 
             
       - name: validate manifests
