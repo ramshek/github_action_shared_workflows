@@ -1,6 +1,11 @@
 name: Validate Kubernetes Manifests
 on:
   workflow_call:
+    secrets:
+      KUBE_CONFIG_SECRET_NAME:
+        required: true
+      KUBE_CONFIG_CLUSTER_NAME:
+        required: true
     inputs:
       kubernetes-manifest-files:
         required: true
@@ -44,7 +49,11 @@ jobs:
             ${{ inputs.kubernetes-manifest-files }}
           placeholders: |
             ${{ inputs.kubernetes-manifest-env }}
-
+            
+      - uses: Azure/k8s-set-context@v3
+        with:
+          kubeconfig: ${{ secrets[env.KUBE_CONFIG_SECRET_NAME] }}
+          context: ${{ secrets[env.KUBE_CONFIG_CLUSTER_NAME] }}
             
       - name: validate manifests
         uses: Azure/k8s-lint@v2.0
