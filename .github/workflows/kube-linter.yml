@@ -42,16 +42,16 @@ jobs:
       - name: Set Parameters
         id: set_params
         run: |
-          echo "${{ inputs.kubernetes-manifest-files }}" > ${{ env.FILES_PATH }}
-          echo "${{ inputs.kubernetes-manifest-env }}" > ${{ env.PLACEHOLDERS_PATH }}
+          echo "${{ github.event.inputs.files }}" > ${{ github.workspace }}/files.txt
+          echo "${{ github.event.inputs.placeholders }}" > ${{ github.workspace }}/placeholders.txt
         env:
           FILES_PATH: ${{ github.workspace }}/files.txt
           PLACEHOLDERS_PATH: ${{ github.workspace }}/placeholders.txt
           
       - name: Replace Placeholders
         run: |
-          files=$(cat ${{ env.FILES_PATH }})
-          placeholders=$(cat ${{ env.PLACEHOLDERS_PATH }})
+          files=$(cat ${{ github.workspace }}/files.txt)
+          placeholders=$(cat ${{ github.workspace }}/placeholders.txt)
 
           IFS=$'\n' read -r -a files_array <<< "$files"
           IFS=$'\n' read -r -a placeholders_array <<< "$placeholders"
@@ -70,7 +70,8 @@ jobs:
             done
 
             echo "$content" > "$file"
-          done    
+          done
+    
       
       - name: Show updated files
         run: |
