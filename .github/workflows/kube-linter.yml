@@ -41,12 +41,28 @@ jobs:
           
       - name: replace place holder values in kubernetes manifests
         if: "${{ inputs.kubernetes-manifest-env != '' }}"
-        uses: LSVH/gha-replace-placeholders@v1
-        with:
-          include:
-            ${{ inputs.kubernetes-manifest-files }}
-          placeholders: |
-            ${{ inputs.kubernetes-manifest-env }}          
+        run: |
+          files=$(echo "${{ inputs.kubernetes-manifest-files }}" | tr -d '\r')
+          placeholders=$(echo "${{ inputs.kubernetes-manifest-env }}" | tr -d '\r')
+
+          IFS=$'\n' read -r -a files_array <<< "$files"
+          IFS=$'\n' read -r -a placeholders_array <<< "$placeholders"
+
+          for file in "${files_array[@]}"
+          do
+            content=$(cat "$file")
+
+            for placeholder in "${placeholders_array[@]}"
+            do
+              IFS='=' read -r -a placeholder_parts <<< "$placeholder"
+              search="${placeholder_parts[0]}"
+              replace="${placeholder_parts[1]}"
+
+              content=${content//$search/$replace}
+            done
+
+            echo "$content" > "$file"
+          done     
             
       - uses: Azure/k8s-set-context@v3
         with:
