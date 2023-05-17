@@ -4,8 +4,6 @@ on:
     secrets:
       KUBE_CONFIG_SECRET_NAME:
         required: true
-      KUBE_CONFIG_CLUSTER_NAME:
-        required: true
     inputs:
       kubernetes-manifest-files:
         required: true
