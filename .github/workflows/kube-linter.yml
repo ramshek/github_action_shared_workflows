@@ -37,7 +37,7 @@ jobs:
           echo "EOF" >> $GITHUB_ENV
           
       - name: replace place holder values in kubernetes manifests
-        if: github.event_name == 'workflow_dispatch' && github.event.inputs.kubernetes-manifest-env != ''
+        if: github.event.inputs.kubernetes-manifest-env != ''
         uses: LSVH/gha-replace-placeholders@v1
         with:
           include:
