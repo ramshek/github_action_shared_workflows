@@ -43,7 +43,7 @@ jobs:
         id: set_params
         run: |
           echo "${{ inputs.kubernetes-manifest-files }}" > ${{ env.FILES_PATH }}
-          echo "${{ kubernetes-manifest-env }}" > ${{ env.PLACEHOLDERS_PATH }}
+          echo "${{ inputs.kubernetes-manifest-env }}" > ${{ env.PLACEHOLDERS_PATH }}
         env:
           FILES_PATH: ${{ github.workspace }}/files.txt
           PLACEHOLDERS_PATH: ${{ github.workspace }}/placeholders.txt
