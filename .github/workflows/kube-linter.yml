@@ -49,6 +49,6 @@ jobs:
       - name: validate manifests
         uses: Azure/k8s-lint@v2.0
         with:
-          lintType: kubeval
+          lintType: kubeval --schema-location https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master
           manifests: |
              ${{ env.LIST_OF_FILES_ENV_VAR }}
