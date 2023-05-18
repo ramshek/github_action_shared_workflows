@@ -39,44 +39,13 @@ jobs:
           echo "${{ inputs.kubernetes-manifest-files }}" | while read -r line ; do echo $line; done >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
           
-      - name: Set Parameters
-        id: set_params
-        run: |
-          echo "${{ github.event.inputs.files }}" > ${{ github.workspace }}/files.txt
-          echo "${{ github.event.inputs.placeholders }}" > ${{ github.workspace }}/placeholders.txt
-        env:
-          FILES_PATH: ${{ github.workspace }}/files.txt
-          PLACEHOLDERS_PATH: ${{ github.workspace }}/placeholders.txt
           
-      - name: Replace Placeholders
-        run: |
-          files=$(cat ${{ github.workspace }}/files.txt)
-          placeholders=$(cat ${{ github.workspace }}/placeholders.txt)
+      - name: Replace placeholder values
+        uses: ./replace-placeholders-action
+        with:
+          files: ${{ toJson(github.event.inputs['kubernetes-manifest-files']) }}
+          placeholders: ${{ toJson(github.event.inputs['kubernetes-manifest-env']) }}
 
-          IFS=$'\n' read -r -a files_array <<< "$files"
-          IFS=$'\n' read -r -a placeholders_array <<< "$placeholders"
-
-          for file in "${files_array[@]}"
-          do
-            content=$(cat "$file")
-
-            for placeholder in "${placeholders_array[@]}"
-            do
-              IFS='=' read -r -a placeholder_parts <<< "$placeholder"
-              search="${placeholder_parts[0]}"
-              replace="${placeholder_parts[1]}"
-
-              content=${content//$search/$replace}
-            done
-
-            echo "$content" > "$file"
-          done
-    
-      
-      - name: Show updated files
-        run: |
-          git status --porcelain
-          
       - uses: Azure/k8s-set-context@v3
         with:
           kubeconfig:  ${{ secrets.KUBE_CONFIG_SECRET_NAME }}
