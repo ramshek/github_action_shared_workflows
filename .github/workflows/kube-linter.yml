@@ -16,20 +16,27 @@ on:
 jobs:
   create-matrix:
     runs-on: ubuntu-latest
+    outputs:
+      kubernetes-file-output: ${{ steps.set-kubernetes-file.outputs.kubernetes-file }}
+      kubernetes-env-output: ${{ steps.set-kubernetes-env.outputs.kubernetes-env }}
 
     steps:
-      - name: Create matrix
-        id: create-matrix
+      - name: Set Kubernetes File
+        id: set-kubernetes-file
         run: |
-          echo "KUBERNETES_FILE=$(echo '${{ inputs.kubernetes-manifest-files }}' | jq -R .)" >> $GITHUB_ENV
-          echo "KUBERNETES_ENV=$(echo '${{ inputs.kubernetes-manifest-env }}' | jq -R .)" >> $GITHUB_ENV
+          echo "::set-output name=kubernetes-file::$(echo '${{ inputs.kubernetes-manifest-files }}' | jq -R .)"
+
+      - name: Set Kubernetes Env
+        id: set-kubernetes-env
+        run: |
+          echo "::set-output name=kubernetes-env::$(echo '${{ inputs.kubernetes-manifest-env }}' | jq -R .)"
 
   validate-k8s-manifests:
     needs: create-matrix
     runs-on: ubuntu-latest
     env:
-      KUBERNETES_FILE: ${{ needs.create-matrix.outputs.KUBERNETES_FILE }}
-      KUBERNETES_ENV: ${{ needs.create-matrix.outputs.KUBERNETES_ENV }}
+      KUBERNETES_FILE: ${{ needs.create-matrix.outputs.kubernetes-file-output }}
+      KUBERNETES_ENV: ${{ needs.create-matrix.outputs.kubernetes-env-output }}
 
     strategy:
       matrix:
