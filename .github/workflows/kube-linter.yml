@@ -21,8 +21,8 @@ jobs:
       - name: Create matrix
         id: create-matrix
         run: |
-          echo "KUBERNETES_FILE=${{ inputs.kubernetes-manifest-files }}" >> $GITHUB_ENV
-          echo "KUBERNETES_ENV=${{ inputs.kubernetes-manifest-env }}" >> $GITHUB_ENV
+          echo "KUBERNETES_FILE=$(echo '${{ inputs.kubernetes-manifest-files }}' | jq -R .)" >> $GITHUB_ENV
+          echo "KUBERNETES_ENV=$(echo '${{ inputs.kubernetes-manifest-env }}' | jq -R .)" >> $GITHUB_ENV
 
   validate-k8s-manifests:
     needs: create-matrix
@@ -33,8 +33,8 @@ jobs:
 
     strategy:
       matrix:
-        kubernetes-file: ${{ split(env.KUBERNETES_FILE, '\n') }}
-        kubernetes-env: ${{ split(env.KUBERNETES_ENV, '\n') }}
+        kubernetes-file: ${{ fromJSON(env.KUBERNETES_FILE) }}
+        kubernetes-env: ${{ fromJSON(env.KUBERNETES_ENV) }}
 
     permissions:
       contents: 'read'
