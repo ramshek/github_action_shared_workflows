@@ -9,20 +9,16 @@ on:
         required: true
         type: string
       kubernetes-manifest-env:
-          required: false
-          type: string
+        required: false
+        type: string
 
 jobs:
   validate-k8s-manifests:
-    runs-on: ubuntu-latest 
+    runs-on: ubuntu-latest
     
     strategy:
       matrix:
         kubectl-version: [v1.24.10]
-    permissions:
-      contents: 'read'
-      id-token: 'write'
- 
     steps:
       - name: Checkout branch
         uses: actions/checkout@v3
@@ -31,31 +27,30 @@ jobs:
         uses: azure/setup-kubectl@v3
         with:
           version: ${{ matrix.kubectl-version }}
-    
           
       - name: Create list of manifest files
         run: |
           echo "LIST_OF_FILES_ENV_VAR<<EOF" >> $GITHUB_ENV
           echo "${{ inputs.kubernetes-manifest-files }}" | while read -r line ; do echo $line; done >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
-          
+
       - name: replace place holder values in kubernetes manifests
         if: "${{ inputs.kubernetes-manifest-env != '' }}"
-        uses: prabhakarareddygaddam-mcd/replace-action@1.0.0
+        uses: LSVH/gha-replace-placeholders@v1
         with:
-          files:
+          include:
             ${{ inputs.kubernetes-manifest-files }}
-          replacements: |
-            ${{ inputs.kubernetes-manifest-env }}          
-          
-            
-      - uses: Azure/k8s-set-context@v3
+          placeholders: |
+            ${{ inputs.kubernetes-manifest-env }}
+
+      - name: Set kube context
+        uses: Azure/k8s-set-context@v3
         with:
           kubeconfig:  ${{ secrets.KUBE_CONFIG_SECRET_NAME }}
           
-      - name: validate 
+      - name: validate manifests
         uses: Azure/k8s-lint@v2.0
         with:
           lintType: dryrun
           manifests: |
-             ${{ env.LIST_OF_FILES_ENV_VAR }}
+            ${{ env.LIST_OF_FILES_ENV_VAR }}
