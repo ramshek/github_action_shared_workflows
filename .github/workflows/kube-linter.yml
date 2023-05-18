@@ -42,7 +42,7 @@ jobs:
           
       - name: Replace placeholder values
         run: |
-          chmod +x entrypoint.sh
+          chmod +x ./entrypoint.sh
           ./entrypoint.sh "${{ github.event.inputs['kubernetes-manifest-files'] }}" "${{ github.event.inputs['kubernetes-manifest-env'] }}"
       
 
