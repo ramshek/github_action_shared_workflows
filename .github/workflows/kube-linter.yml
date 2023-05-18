@@ -50,7 +50,7 @@ jobs:
             for placeholder in $PLACEHOLDERS; do
               key=$(echo $placeholder | cut -d'=' -f1)
               value=$(echo $placeholder | cut -d'=' -f2-)
-              sed -i "s|$key|$value|g" $file
+              sed -i "s|\\\$${key}|${value}|g" $file
             done
           done
 
