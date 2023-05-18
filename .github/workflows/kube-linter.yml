@@ -42,8 +42,8 @@ jobs:
       
       - uses: datamonsters/replace-action@v2
         with:
-          files: kubernetes/deployment.yml
-          replacements: '$APP_HTTP_REPLICAS=1'
+          files: kubernetes/deployment.yml, kubernetes/service.yml
+          replacements: '$APP_HTTP_REPLICAS=1, $$PROTOCOL=TCP'
 
       - uses: Azure/k8s-set-context@v3
         with:
