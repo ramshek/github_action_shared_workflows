@@ -42,8 +42,8 @@ jobs:
       
       - uses: datamonsters/replace-action@v2
         with:
-          files: ${{ join(inputs.kubernetes-manifest-files, ',') }}
-          replacements: ${{ join(inputs.kubernetes-manifest-env, ',') }} 
+          files: app-deployment.yaml
+          replacements: '$APP_HTTP_REPLICAS=1'
 
       - uses: Azure/k8s-set-context@v3
         with:
