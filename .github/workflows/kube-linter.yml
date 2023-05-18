@@ -39,22 +39,14 @@ jobs:
           echo "${{ inputs.kubernetes-manifest-files }}" | while read -r line ; do echo $line; done >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
           
-      - name: replace place holder values in kubernetes manifests
-        if: "${{ inputs.kubernetes-manifest-env != '' }}"
-        uses: LSVH/gha-replace-placeholders@v1
+      
+      - uses: datamonsters/replace-action@v2
         with:
-          include:
+          files: |
             ${{ inputs.kubernetes-manifest-files }}
-          placeholders: |
-            ${{ inputs.kubernetes-manifest-env }}          
-            
-      - run:
-          ls -lrt
-          sed 's|\$APP_HOSTNAME|app.travelflow.com|g' -i kubernetes/ingress.yml
-          sed 's|\$PARTNER_PAGES_HOSTNAME|events.travelflow.com|g' kubernetes/ingress.yml
-          sed 's|\$B2B_PORTAL_HOSTNAME|b2b.travelflow.com|g' kubernetes/ingress.yml
-          sed 's|\$IMAGE_SERVER_HOSTNAME|$images.app.travelflow.com|g' kubernetes/ingress.yml
-            
+          replacements: |
+            ${{ inputs.kubernetes-manifest-env }} 
+
       - uses: Azure/k8s-set-context@v3
         with:
           kubeconfig:  ${{ secrets.KUBE_CONFIG_SECRET_NAME }}
