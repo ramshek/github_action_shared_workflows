@@ -13,14 +13,26 @@ on:
           type: string
 
 jobs:
+  create-matrix:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Create matrix
+        id: create-matrix
+        run: |
+          echo "KUBERNETES_FILE=${{ inputs.kubernetes-manifest-files }}" >> $GITHUB_ENV
+          echo "KUBERNETES_ENV=${{ inputs.kubernetes-manifest-env }}" >> $GITHUB_ENV
+          
   validate-k8s-manifests:
     runs-on: ubuntu-latest 
-    
+    env:
+      KUBERNETES_FILE: ${{ needs.create-matrix.outputs.KUBERNETES_FILE }}
+      KUBERNETES_ENV: ${{ needs.create-matrix.outputs.KUBERNETES_ENV }}
     strategy:
       matrix:
         kubectl-version: [v1.24.10]
-        kubernetes-file: ${{ fromJson(inputs.kubernetes-manifest-files) }}
-        kubernetes-env: ${{ fromJson(inputs.kubernetes-manifest-env) }}
+        kubernetes-file: ${{ fromJson(env.KUBERNETES_FILE) }}
+        kubernetes-env: ${{ fromJson(env.KUBERNETES_ENV) }}
         
     permissions:
       contents: 'read'
@@ -48,13 +60,4 @@ jobs:
           files: ${{ matrix.kubernetes-file }}
           replacements: ${{ matrix.kubernetes-env }}
 
-      - uses: Azure/k8s-set-context@v3
-        with:
-          kubeconfig:  ${{ secrets.KUBE_CONFIG_SECRET_NAME }}
-          
-      - name: validate 
-        uses: Azure/k8s-lint@v2.0
-        with:
-          lintType: dryrun
-          manifests: |
-             ${{ env.LIST_OF_FILES_ENV_VAR }}
+
