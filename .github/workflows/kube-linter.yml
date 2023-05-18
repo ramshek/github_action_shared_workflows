@@ -41,10 +41,10 @@ jobs:
           
           
       - name: Replace placeholder values
-        uses: ./replace-placeholders-action
-        with:
-          files: ${{ toJson(github.event.inputs['kubernetes-manifest-files']) }}
-          placeholders: ${{ toJson(github.event.inputs['kubernetes-manifest-env']) }}
+        run: |
+          chmod +x replace-placeholders.sh
+          ./replace-placeholders.sh "${{ github.event.inputs['kubernetes-manifest-files'] }}" "${{ github.event.inputs['kubernetes-manifest-env'] }}"
+      
 
       - uses: Azure/k8s-set-context@v3
         with:

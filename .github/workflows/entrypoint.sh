@@ -1,10 +1,8 @@
-#!/bin/sh
+#!/bin/bash
 
-# Read the input parameters
-FILES=$INPUT_FILES
-PLACEHOLDERS=$INPUT_PLACEHOLDERS
+FILES=$1
+PLACEHOLDERS=$2
 
-# Replace the placeholders in each file
 for file in $FILES; do
   echo "Replacing placeholders in $file"
   for placeholder in $PLACEHOLDERS; do
