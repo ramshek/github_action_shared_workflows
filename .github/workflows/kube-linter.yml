@@ -42,10 +42,8 @@ jobs:
       
       - uses: datamonsters/replace-action@v2
         with:
-          files: |
-            ${{ inputs.kubernetes-manifest-files }}
-          replacements: |
-            ${{ inputs.kubernetes-manifest-env }} 
+          files: ${{ join(inputs.kubernetes-manifest-files, ',') }}
+          replacements: ${{ join(inputs.kubernetes-manifest-env, ',') }} 
 
       - uses: Azure/k8s-set-context@v3
         with:
