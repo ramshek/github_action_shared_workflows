@@ -41,18 +41,12 @@ jobs:
           
           
       - name: Replace placeholder values
-        run: |
-          FILES=$(echo "${{ github.event.inputs['kubernetes-manifest-files'] }}" | tr '\n' ' ')
-          PLACEHOLDERS=$(echo "${{ github.event.inputs['kubernetes-manifest-env'] }}" | tr '\n' ' ')
-
-          for file in $FILES; do
-            echo "Replacing placeholders in $file"
-            for placeholder in $PLACEHOLDERS; do
-              key=$(echo $placeholder | cut -d'=' -f1)
-              value=$(echo $placeholder | cut -d'=' -f2-)
-              sed -i "s|\\\$${key}|${value}|g" $file
-            done
-          done
+        uses: ramshek/replace-placeholders@main
+        with:
+         placeholders: |
+           ${{ inputs.kubernetes-manifest-env }}
+         files: |
+           ${{ inputs.kubernetes-manifest-files }}
 
       - uses: Azure/k8s-set-context@v3
         with:
