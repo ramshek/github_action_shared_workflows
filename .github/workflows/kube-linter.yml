@@ -49,6 +49,7 @@ jobs:
             ${{ inputs.kubernetes-manifest-env }}          
             
       - run:
+          ls -lrt
           sed 's|\$APP_HOSTNAME|app.travelflow.com|g' -i kubernetes/ingress.yml
           sed 's|\$PARTNER_PAGES_HOSTNAME|events.travelflow.com|g' kubernetes/ingress.yml
           sed 's|\$B2B_PORTAL_HOSTNAME|b2b.travelflow.com|g' kubernetes/ingress.yml
