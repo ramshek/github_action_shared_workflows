@@ -42,7 +42,7 @@ jobs:
       
       - uses: datamonsters/replace-action@v2
         with:
-          files: app-deployment.yaml
+          files: kubernetes/deployment.yml
           replacements: '$APP_HTTP_REPLICAS=1'
 
       - uses: Azure/k8s-set-context@v3
