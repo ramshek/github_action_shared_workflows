@@ -49,10 +49,10 @@ jobs:
             ${{ inputs.kubernetes-manifest-env }}          
             
       - run:
-          sed 's|\$APP_HOSTNAME|app.travelflow.com|g' -i deployment/ingress-config.yml
-          sed 's|\$PARTNER_PAGES_HOSTNAME|events.travelflow.com|g' -i deployment/ingress-config.yml
-          sed 's|\$B2B_PORTAL_HOSTNAME|b2b.travelflow.com|g' -i deployment/ingress-config.yml
-          sed 's|\$IMAGE_SERVER_HOSTNAME|$images.app.travelflow.com|g' -i deployment/ingress-config.yml
+          sed 's|\$APP_HOSTNAME|app.travelflow.com|g' -i kubernetes/ingress.yml
+          sed 's|\$PARTNER_PAGES_HOSTNAME|events.travelflow.com|g' kubernetes/ingress.yml
+          sed 's|\$B2B_PORTAL_HOSTNAME|b2b.travelflow.com|g' kubernetes/ingress.yml
+          sed 's|\$IMAGE_SERVER_HOSTNAME|$images.app.travelflow.com|g' kubernetes/ingress.yml
             
       - uses: Azure/k8s-set-context@v3
         with:
