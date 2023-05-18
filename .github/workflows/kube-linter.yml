@@ -19,6 +19,9 @@ jobs:
     strategy:
       matrix:
         kubectl-version: [v1.24.10]
+        kubernetes-file: ${{ fromJson(inputs.kubernetes-manifest-files) }}
+        kubernetes-env: ${{ fromJson(inputs.kubernetes-manifest-env) }}
+        
     permissions:
       contents: 'read'
       id-token: 'write'
@@ -42,8 +45,8 @@ jobs:
       
       - uses: datamonsters/replace-action@v2
         with:
-          files: kubernetes/deployment.yml, kubernetes/service.yml
-          replacements: '$APP_HTTP_REPLICAS=1, $PROTOCOL=TCP'
+          files: ${{ matrix.kubernetes-file }}
+          replacements: ${{ matrix.kubernetes-env }}
 
       - uses: Azure/k8s-set-context@v3
         with:
