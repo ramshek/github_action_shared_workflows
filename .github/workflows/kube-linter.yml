@@ -1,5 +1,4 @@
 name: Validate Kubernetes Manifests
-
 on:
   workflow_call:
     secrets:
@@ -10,69 +9,53 @@ on:
         required: true
         type: string
       kubernetes-manifest-env:
-        required: false
-        type: string
+          required: false
+          type: string
 
 jobs:
-  create-matrix:
-    runs-on: ubuntu-latest
-    outputs:
-      kubernetes-file-output: ${{ steps.set-kubernetes-file.outputs.kubernetes-file }}
-      kubernetes-env-output: ${{ steps.set-kubernetes-env.outputs.kubernetes-env }}
-
-    steps:
-      - name: Set Kubernetes File
-        id: set-kubernetes-file
-        run: |
-          echo "::set-output name=kubernetes-file::$(echo '${{ inputs.kubernetes-manifest-files }}' | jq -R .)"
-
-      - name: Set Kubernetes Env
-        id: set-kubernetes-env
-        run: |
-          echo "::set-output name=kubernetes-env::$(echo '${{ inputs.kubernetes-manifest-env }}' | jq -R .)"
-
   validate-k8s-manifests:
-    needs: create-matrix
-    runs-on: ubuntu-latest
-    env:
-      KUBERNETES_FILE: ${{ needs.create-matrix.outputs.kubernetes-file-output }}
-      KUBERNETES_ENV: ${{ needs.create-matrix.outputs.kubernetes-env-output }}
-
+    runs-on: ubuntu-latest 
+    
     strategy:
       matrix:
-        kubernetes-file: ${{ fromJSON(env.KUBERNETES_FILE) }}
-        kubernetes-env: ${{ fromJSON(env.KUBERNETES_ENV) }}
-
+        kubectl-version: [v1.24.10]
     permissions:
       contents: 'read'
       id-token: 'write'
-
+ 
     steps:
       - name: Checkout branch
         uses: actions/checkout@v3
-
+        
       - name: Setup Kubectl version
         uses: azure/setup-kubectl@v3
         with:
           version: ${{ matrix.kubectl-version }}
-
+    
+          
       - name: Create list of manifest files
         run: |
           echo "LIST_OF_FILES_ENV_VAR<<EOF" >> $GITHUB_ENV
-          echo "${{ join(matrix.kubernetes-file, '\n') }}" >> $GITHUB_ENV
+          echo "${{ inputs.kubernetes-manifest-files }}" | while read -r line ; do echo $line; done >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
-
-      - uses: datamonsters/replace-action@v2
+          
+      - name: replace place holder values in kubernetes manifests
+        if: "${{ inputs.kubernetes-manifest-env != '' }}"
+        uses: prabhakarareddygaddam-mcd/replace-action@1.0.0
         with:
-          files: ${{ join(matrix.kubernetes-file, '\n') }}
-          replacements: ${{ join(matrix.kubernetes-env, '\n') }}
-
+          include:
+            ${{ inputs.kubernetes-manifest-files }}
+          placeholders: |
+            ${{ inputs.kubernetes-manifest-env }}          
+          
+            
       - uses: Azure/k8s-set-context@v3
         with:
-          kubeconfig: ${{ secrets.KUBE_CONFIG_SECRET_NAME }}
-
-      - name: validate
+          kubeconfig:  ${{ secrets.KUBE_CONFIG_SECRET_NAME }}
+          
+      - name: validate 
         uses: Azure/k8s-lint@v2.0
         with:
           lintType: dryrun
-          manifests: ${{ env.LIST_OF_FILES_ENV_VAR }}
+          manifests: |
+             ${{ env.LIST_OF_FILES_ENV_VAR }}
