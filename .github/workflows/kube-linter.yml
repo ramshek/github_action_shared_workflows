@@ -8,6 +8,9 @@ on:
       kubernetes-manifest-files:
         required: true
         type: string
+      kubeconfig:
+        required: true
+        type: string
 
 jobs:
   validate-k8s-manifests:
