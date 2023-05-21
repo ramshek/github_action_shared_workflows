@@ -37,6 +37,11 @@ jobs:
       - uses: Azure/k8s-set-context@v3
         with:
           kubeconfig:  ${{ secrets.kubeconfig }}
+
+      - name: Download a single artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: my-artifact
           
       - name: validate 
         uses: Azure/k8s-lint@v2.0
