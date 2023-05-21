@@ -21,9 +21,7 @@ jobs:
       id-token: 'write'
  
     steps:
-      - name: Checkout branch
-        uses: actions/checkout@v3
-        
+
       - name: Setup Kubectl version
         uses: azure/setup-kubectl@v3
         with:
