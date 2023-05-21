@@ -38,7 +38,7 @@ jobs:
 
       - uses: Azure/k8s-set-context@v3
         with:
-          kubeconfig:  ${{ secrets.KUBE_CONFIG_SECRET_NAME }}
+          kubeconfig:  ${{ secrets.kubeconfig }}
           
       - name: validate 
         uses: Azure/k8s-lint@v2.0
