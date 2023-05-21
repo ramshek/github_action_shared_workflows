@@ -35,7 +35,6 @@ jobs:
           echo "LIST_OF_FILES_ENV_VAR<<EOF" >> $GITHUB_ENV
           echo "${{ inputs.kubernetes-manifest-files }}" | while read -r line ; do echo $line; done >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
-          
 
       - uses: Azure/k8s-set-context@v3
         with:
