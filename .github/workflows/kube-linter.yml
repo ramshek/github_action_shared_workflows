@@ -2,15 +2,12 @@ name: Validate Kubernetes Manifests
 on:
   workflow_call:
     secrets:
-      KUBE_CONFIG_SECRET_NAME:
+      kubeconfig:
         required: true
     inputs:
       kubernetes-manifest-files:
         required: true
         type: string
-      kubernetes-manifest-env:
-          required: false
-          type: string
 
 jobs:
   validate-k8s-manifests:
@@ -39,12 +36,6 @@ jobs:
           echo "${{ inputs.kubernetes-manifest-files }}" | while read -r line ; do echo $line; done >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
           
-          
-      - name: Replace placeholder values
-        run: |
-          chmod +x ./entrypoint.sh
-          ./entrypoint.sh "${{ github.event.inputs['kubernetes-manifest-files'] }}" "${{ github.event.inputs['kubernetes-manifest-env'] }}"
-      
 
       - uses: Azure/k8s-set-context@v3
         with:
